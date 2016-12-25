@@ -5,6 +5,9 @@ from yahoo_finance import Share, YQLResponseMalformedError
 from datetime import timedelta, datetime
 import math
 import config
+import logging
+
+logger = logging.getLogger(__name__)
 
 es = Elasticsearch(config.conf['elasticsearch']['hosts'])
 
@@ -57,7 +60,7 @@ class Stocks(object):
                     'volume': int(day['Volume'])
                 })
         except YQLResponseMalformedError:
-            print('unable to read response from: ', symbol)
+            logger.exception("unable to retrieve stock values from yahoo api")
 
     def getHistPrice(self, symbol, period, mvavg_window, date_end, days):
         """

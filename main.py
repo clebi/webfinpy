@@ -6,6 +6,9 @@ from falcon_cors import CORS
 from datetime import date, timedelta
 from fin import Stocks
 from middle import JsonTranslator
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class Graph(object):
@@ -20,9 +23,13 @@ class Graph(object):
             raise Exception("step window is missing")
         today = date.today() - timedelta(days=1)
         stocks = Stocks()
-        hist = stocks.getHistPrice(stock_id, int(req.params['step']), int(req.params['window']), today, int(days))
-        resp.status = falcon.HTTP_200
-        req.context['result'] = hist
+        try:
+            hist = stocks.getHistPrice(stock_id, int(req.params['step']), int(req.params['window']), today, int(days))
+            resp.status = falcon.HTTP_200
+            req.context['result'] = hist
+        except Exception:
+            logger.exception("Error getting graph data")
+            raise falcon.HTTPInternalServerError('unknown error')
 
 
 cors = CORS(allow_all_origins=True)
