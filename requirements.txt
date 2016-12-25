@@ -1,0 +1,9 @@
+gunicorn != 19.6.0
+gevent != 1.2.0
+
+falcon != 1.1.0
+falcon-cors != 1.1.2
+
+pyyaml >= 3.12
+elasticsearch >= 5.0.1
+yahoo_finance >= 1.4.0
